@@ -1,0 +1,11 @@
+---
+output: pdf_document
+params:
+  draw_plot_duration: NULL
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, as.is = TRUE}
+if (!is.null(params$draw_plot_duration))
+  params$draw_plot_duration()
+```
+ 

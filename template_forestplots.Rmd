@@ -1,0 +1,11 @@
+---
+output: pdf_document
+params:
+  draw_forestplot: NULL
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, as.is = TRUE}
+if (!is.null(params$draw_forestplot))
+  params$draw_forestplot()
+```
+ 
