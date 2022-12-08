@@ -20,7 +20,11 @@ Data A:
 Hackathon tasks:
 
 •	Improvement of Hackathon Shiny app objectives (e.g., enhance AE plot download file, more options for AE measurement output with selection of AE type, display forest plot whole or individual option plot and table for survival outcome, response outcome, and treatment duration outcome, and option to define early AE).
+
 •	Network analysis of significant AEs (e.g., to offer the potential for insight into AE relationship to inform clinical practice, like pathway analysis in bioinformatics).
+
 •	Pubmed analysis of significant AEs (e.g., PubMed analysis of significant AEs for clinical relevance and to help verify if a significant AE is a new discovery, a support to published literature through current available R packages, such as  RISmed and easyPubMed).
+
 •	Report of AE data analysis (e.g., key summary text to highlight significant AE).
+
 •	Sensitivity analysis of early AE event (e.g., evaluate various lengths such as, 2 weeks up to 6 weeks, and measure variation of results for early AE event)
