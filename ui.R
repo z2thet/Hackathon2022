@@ -136,7 +136,7 @@ function(request){
                   tabPanel( #https://stackoverflow.com/questions/46471756/download-pdf-report-in-shiny
                     div(icon("database"), "Response tests"),
                      div(
-                       #downloadButton('downloadforestplotspdf',"Download Response plots"),
+                        downloadButton('download_responseplots',"Download Response plots"),
                         br(),
                         br(),
                         br() 

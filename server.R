@@ -1735,9 +1735,9 @@ shinyServer(function(input, output, session) {
           
         }
         
-        testing_BOR_ans<- responseplots(a41=a41now,adf=toxdataNOW)
+        #testing_BOR_ans<- responseplots(a41=a41now,adf=toxdataNOW)
         
-        as_tibble(do.call(rbind,testing_BOR_ans$coef) %>% select(AE,everything()))
+        #as_tibble(do.call(rbind,testing_BOR_ans$coef) %>% select(AE,everything()))
      
         testing_BOR_ans<- responseplots(a41=a41now,adf=toxdataNOW)
  
@@ -1760,6 +1760,31 @@ shinyServer(function(input, output, session) {
           
         }, options = list(pageLength = 72))
         
+
+    
+    
+    
+    
+    
+    #  plots of responses ###  
+    draw_responseplots <- function() {  testing_BOR_ans()$plot   }
+    
+    # render draw_responseplots ###  
+    output$plotall_responseplots <- renderPlot({   draw_responseplots() })
+    
+    # Download FOREST PLOTS pdf ####
+    output$download_responseplots <- downloadHandler(
+      filename = "Response_plots_report.pdf",
+      content = function(file) {
+        res <- rmarkdown::render(
+          "template_responseplots.Rmd",
+          params = list(
+            draw_responseplots = draw_responseplots 
+          )
+        )
+        file.rename(res, file)
+      }
+    )
     
   # end: Response testz plots       ^^^^^^^^^^^^^^^^####     
       
