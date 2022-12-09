@@ -194,52 +194,65 @@ shinyServer(function(input, output, session) {
   # ~~~~~ render datatables TO DISPLAY ~~~~~~~~#####
     
     output$selected_data <- DT::renderDataTable({
-        datatable(AE_data(), extensions = "FixedHeader", options = list(
-            scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
-            initComplete = JS(
-                "function(settings, json) {",
-                "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
-                "}")), 
-            rownames = FALSE)
+        # datatable(AE_data(), extensions = "FixedHeader", options = list(
+        #     scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
+        #     initComplete = JS(
+        #         "function(settings, json) {",
+        #         "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
+        #         "}")), 
+        #     rownames = FALSE)
+      
+      
+      datatable(AE_data(),   
+                rownames = FALSE)
     })
     
     output$demographics_data <- DT::renderDataTable({
-      datatable(demographics_data(), extensions = "FixedHeader", options = list(
-        scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
-        initComplete = JS(
-          "function(settings, json) {",
-          "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
-          "}")), 
-        rownames = FALSE)
+      # datatable(demographics_data(), extensions = "FixedHeader", options = list(
+      #   scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
+      #   initComplete = JS(
+      #     "function(settings, json) {",
+      #     "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
+      #     "}")), 
+      #   rownames = FALSE)
+      datatable(demographics_data(),   
+                rownames = FALSE)
     })
     
     output$followup_data <- DT::renderDataTable({
-      datatable(fu_data_upload(), extensions = "FixedHeader", options = list(
-        scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
-        initComplete = JS(
-          "function(settings, json) {",
-          "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
-          "}")), 
-        rownames = FALSE)
+      # datatable(fu_data_upload(), extensions = "FixedHeader", options = list(
+      #   scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
+      #   initComplete = JS(
+      #     "function(settings, json) {",
+      #     "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
+      #     "}")), 
+      #   rownames = FALSE)
+      datatable(fu_data_upload(),   
+                rownames = FALSE)
     })
     
     output$tox_data <- DT::renderDataTable({
-      datatable(toxicity_data(), extensions = "FixedHeader", options = list(
-        scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
-        initComplete = JS(
-          "function(settings, json) {",
-          "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
-          "}")), 
+      # datatable(toxicity_data(), extensions = "FixedHeader", options = list(
+      #   scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
+      #   initComplete = JS(
+      #     "function(settings, json) {",
+      #     "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
+      #     "}")), 
+      #   rownames = FALSE)
+      
+      datatable(toxicity_data(),   
         rownames = FALSE)
     })
     
     output$drug_data <- DT::renderDataTable({
-      datatable(da_data_upload(), extensions = "FixedHeader", options = list(
-        scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
-        initComplete = JS(
-          "function(settings, json) {",
-          "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
-          "}")), 
+      # datatable(da_data_upload(), extensions = "FixedHeader", options = list(
+      #   scrollX = TRUE, pageLength = 15, fixedHeader = FALSE, autoWidth = TRUE, searchHighlight = TRUE, 
+      #   initComplete = JS(
+      #     "function(settings, json) {",
+      #     "$(this.api().table().header()).css({'background-color': '#58b0e3', 'color': '#fff'});",
+      #     "}")), 
+      #   rownames = FALSE)
+      datatable(da_data_upload(),  
         rownames = FALSE)
     })   
     
@@ -1551,7 +1564,7 @@ shinyServer(function(input, output, session) {
                 
               )
             
-            #VVVVVVVVVVVVVVVVGGPLOT VVVVVVVVVVV~~~~####
+            #VVVVVVVVVVVVVVVVGGPLOT VVVVVVVVVVV~  
             #AE.survival.p.plot.list[[k]] <- 
             # print("length( e4$AE.type)")
             # print(length( e4$AE.type))
@@ -1735,9 +1748,9 @@ shinyServer(function(input, output, session) {
           
         }
         
-        #testing_BOR_ans<- responseplots(a41=a41now,adf=toxdataNOW)
+        testing_BOR_ans<- responseplots(a41=a41now,adf=toxdataNOW)
         
-        #as_tibble(do.call(rbind,testing_BOR_ans$coef) %>% select(AE,everything()))
+        as_tibble(do.call(rbind,testing_BOR_ans$coef) %>% select(AE,everything()))
      
         testing_BOR_ans<- responseplots(a41=a41now,adf=toxdataNOW)
  
@@ -1760,19 +1773,13 @@ shinyServer(function(input, output, session) {
           
         }, options = list(pageLength = 72))
         
-
-    
-    
-    
-    
-    
     #  plots of responses ###  
     draw_responseplots <- function() {  testing_BOR_ans()$plot   }
     
     # render draw_responseplots ###  
     output$plotall_responseplots <- renderPlot({   draw_responseplots() })
     
-    # Download FOREST PLOTS pdf ####
+    # Download response PLOTS pdf ####
     output$download_responseplots <- downloadHandler(
       filename = "Response_plots_report.pdf",
       content = function(file) {
@@ -1783,9 +1790,9 @@ shinyServer(function(input, output, session) {
           )
         )
         file.rename(res, file)
+        #file.copy(res,file)
       }
-    )
-    
+    )  
   # end: Response testz plots       ^^^^^^^^^^^^^^^^####     
       
     
@@ -1983,8 +1990,288 @@ shinyServer(function(input, output, session) {
           file.rename(res, file)
         }
       )
-  # end: duration plots        ^^^^^^^^^####
+  # end: correlation DURATION plots        ^^^^^^^^^####
    
       
+      # start: survival summary tab VVVVVVVVVVVVVVVV####
+      survivialtempout <- reactive({
+        
+        fun1<-function(my.data.list=coef.list)
+        {
+          surv.name<-c('os','pfs')
+          e2.comb<-numeric()
+          for(i in 1:length(surv.name))
+          {
+            print(my.data.list)
+            e1=sapply(my.data.list,function(x) x[[surv.name[i]]][,c(2,5)],simplify=F)
+            print(e1)
+            e2<-data.frame(do.call("rbind",e1))
+            dim.index<-dim(e2[!is.na(e2[,2]),])[1] #--ensure not all NA--
+            if(dim.index>0)
+            {
+              e2<-e2%>%add_rownames(var='data.type')%>%mutate(survival=surv.name[i],AE.type=rep(names(my.data.list),each=2),
+                                                              data.type=sub('y.*','Continuous',sub('AE.*','Occurrence',data.type)))%>%
+                relocate(AE.type)
+              names(e2)[3:4]<-c('HR','p')
+              e21<-e2%>%filter(data.type %in%'Occurrence')%>%slice(ends_with('occurrence',vars=AE.type))
+              e22<-e2%>%filter(data.type %in%'Continuous')%>%slice(ends_with('occurrence',vars=AE.type))%>%
+                mutate(AE.type=sub('occurrence','sum_unique_AE',AE.type))
+              e23<-e2%>%filter(data.type %in%'Continuous')%>%slice(-ends_with('occurrence',vars=AE.type))
+              e2.comb<-rbind(e2.comb,rbind(e21,e22,e23))
+            }
+          }
+          e2.comb
+        }
+        
+        
+        
+        # toxicity.raw.data<-toxicity.data.list[[trial.id]]$toxicity.data
+        # names(toxicity.raw.data)
+        # a0=get(ls()[grep('survival_ans',ls())])
+        # str(a0,1,0)
+        # 
+        # List of 3
+        # $ coef     :List of 76
+        # $ coef.long: tibble [1,792 x 6] (S3: tbl_df/tbl/data.frame)
+        # $ plot     :List of 76
+        
+        #a1=a0$coef
+        a1=responsePvaluelistforestplots()$coef
+         
+        # str(a1,0,0)# List of 76 lists of different length
+        # str(a1$whole,1,0)# 18 lists of length 2 
+        # $grade3.treatment.related.occurrence
+        # $grade3.treatment.related.occurrence$os
+        # coef exp(coef)  se(coef)        z  Pr(>|z|)
+        # y          1.708796  5.522309 0.7071305 2.416521 0.0156696
+        # AE.binTRUE 3.417592 30.495901 1.4142611 2.416521 0.0156696
+        # 
+        # $grade3.treatment.related.occurrence$pfs
+        # coef exp(coef)  se(coef)        z  Pr(>|z|)
+        # y          0.6810766  1.976004 0.5347283 1.273687 0.2027743
+        # AE.binTRUE 1.3621533  3.904592 1.0694567 1.273687 0.2027743
+        a2<-sapply(a1,fun1,simplify = F)
+        
+        # str(a2,1,0)
+        
+        print(a2$whole, n = 48)
+        a3=sapply(a2[sapply(a2,length)>0],function(x) x%>%filter(p<0.05),simplify = F)
+        # str(a3,1,0)
+        
+        print(a3$whole, n = 48)
+        a4=sapply(a3,dim)[1,]
+         
+        
+        a31=a3[a4!=0]
+         
+        str(a31,1,0)
+        
+        
+        
+        a5=sapply(a31,function(x)
+        {
+          x=x%>%mutate(group=paste(survival,factor(p<0.05,level=c(T,F),label=c('Sig','NS')),
+                                   factor(HR>1,level=c(T,F),label=c('HR>1','HR<1')),sep='_'))
+          tapply(as.vector(x$AE.type),x$group,sort)
+        }
+        )
+        
+        
+        fun.AE.summary<-function(x)
+        {
+          paste(gsub('NA','',gsub('grade3','High-Grade',gsub('grade12','Low-Grade',gsub('treatment\\.related','Trt',x)))),collapse='/')
+        }
+        
+        fun.AE.paste<-function(x)
+        {
+          index1<-grep('treatment',x);
+          if(length(index1)>0) x<-x[-index1]
+          x
+        }
+        
+        
+        a6<-sapply(a5,function(y) as.vector(sapply(y,function(x) names(table(sub('\\.sum_unique_AE','',sub('\\.occurrence','',sub('\\.fre','',sub('\\.duration','',x)))))),simplify = F)))
+        
+        a6.trt<-sapply(a6,function(y) unlist(sapply(y,function(x) {index1<-grep('treatment',x); if(length(index1)==0) NULL else
+        {
+          x<-x[index1];paste(x,collapse='/')
+        }})))
+        a6.trt<-a6.trt[!sapply(a6.trt,is.null)]
+        a6.trt<-sapply(a6.trt,function(y) sapply(y,fun.AE.summary,simplify = F))
+        
+        a6.no_trt<-sapply(a6,function(y) unlist(sapply(y,function(x) {index1<-grep('treatment',x); if(length(index1)>0) x<-x[-index1];paste(x,collapse='/')})))
+        a6.no_trt<-sapply(a6.no_trt,function(y) sapply(y,fun.AE.summary,simplify = F))
+        
+        a7<-sapply(a6,function(y) sapply(y,function(x) paste(sub('grade3','High-Grade',sub('grade12','Low-Grade',sub('treatment\\.related','Trt',x))),collapse='/')))
+        
+        name1<-c("os_Sig_HR<1","os_Sig_HR>1", "pfs_Sig_HR<1", "pfs_Sig_HR>1")
+        name2<-c("Improved OS","Poorer OS", "Improved PFS",
+                 "Poorer PFS")
+        
+        fun.group<-function(x,name.ref1=name1,name.ref2=name2)
+        {
+          name.tmp1<-names(x)
+          index1<-name.ref1%in%name.tmp1
+          if(sum(index1)<length(name.ref1)) {
+            name.null<-rep('',length(name.ref1[!index1]))
+            names(name.null)<-name.ref1[!index1]
+            x<-c(x,name.null)
+          }
+          x<-x[match(name.ref1,names(x))]
+          names(x)<-name.ref2
+          x
+        }
+        
+        table.AE.survival.All.sig.summary<-t(sapply(a7,function(x) fun.group(unlist(x))))
+        
+        q1=table.AE.survival.All.sig.summary
+        q11=data.frame(AE=rownames(q1),q1)
+        
+        #---table of ind AE by AE category
+        #q2=table(toxicity.raw.data$cdus_ctcae_toxicity_type_code,toxicity.raw.data$toxicity_category)
+        q2=table(AE_data()$cdus_toxicity_type_code,AE_data()$toxicity_category)
+        
+        #---get ind AE under AE category
+        q3=q2[rownames(q2)%in%rownames(q1)[!rownames(q1)%in%c('whole',colnames(q2))],]
+        name1=rownames(q3)
+        q31<-q3[,apply(q3,2,sum)!=0]
+        
+        name2=colnames(q31)
+        q5=apply(q31,1,function(x) name2[x>0])
+        q6=data.frame(cate.AE=q5,AE=names(q5))
+        q7=full_join(q6,q11)
+        q7$cate.AE[(1:dim(q7)[1])[is.na(q7$cate.AE)]]<-q7$AE[(1:dim(q7)[1])[is.na(q7$cate.AE)]]
+        q8=q7[order(q7$cate.AE),]
+        q8$AE[q8$AE==q8$cate.AE]<-NA
+        q8=q8[order(q8$cate.AE,q8$AE,na.last = F),]
+        index1<-grep('whole',q8$cate.AE)
+        if(length(index1)>0)q8<-q8[c(index1,(1:dim(q8)[1])[-index1]),]
+        q8$AE[is.na(q8$AE)]<-''
+        q8 
+        
+      })
+      
+      
+      # Display t-test pvalues and differences ####
+      output$survivalsummarytable <- DT::renderDataTable({
+        todisplay <-  survivialtempout()
+       showN<- NROW(todisplay)
+        datatable(todisplay, rownames = FALSE)
+        
+      }, options = list(pageLength = 50))
+      
+      
+      
+      
+      
+      
+      
+      # end: survival summary          ^^^^^^^^^####
+      
+      # start: response summary tab VVVVVVVVVVVVVVVV####
+      responsetempout <- reactive({
+        
+        #a2=a0$coef
+        a2=testing_BOR_ans()$coef
+        a3=sapply(a2[sapply(a2,length)>0],function(x) x%>%rename(p=p.value, AE.type=Measurement.type)%>%filter((p<0.05)&(BOR%in%'DC_vs_PD'))%>%select(-Best_response),simplify = F)
+        
+        a4=sapply(a3,dim)[1,]
+        a31=a3[a4!=0]
+        
+        a5=sapply(a31,function(x)
+        {
+          x=x%>%mutate(group=paste(factor(p<0.05,level=c(T,F),label=c('Sig','NS')),factor(difference>0,level=c(T,F),label=c('DC>PD','DC<PD')),sep='_'))
+          tapply(as.vector(x$AE.type),x$group,sort)
+        },simplify = F
+        )
+        
+        fun.AE.summary<-function(x)
+        {
+          paste(gsub('NA','',gsub('grade3','High-Grade',gsub('grade12','Low-Grade',gsub('treatment\\.related','Trt',x)))),collapse='/')
+        }
+        
+        fun.AE.paste<-function(x)
+        {
+          index1<-grep('treatment',x);
+          if(length(index1)>0) x<-x[-index1]
+          x
+        }
+        
+        
+        a6<-sapply(a5,function(y) as.vector(sapply(y,function(x) names(table(sub('\\.sum\\.unique','',sub('\\.sum_unique_AE','',sub('\\.occurrence','',sub('\\.fre','',sub('\\.duration','',x))))))),simplify = F)),simplify = F)
+        
+        a6.trt<-sapply(a6,function(y) unlist(sapply(y,function(x) {index1<-grep('treatment',x); if(length(index1)==0) NULL else
+        {
+          x<-x[index1];paste(x,collapse='/')
+        }})))
+        a6.trt<-a6.trt[!sapply(a6.trt,is.null)]
+        a6.trt<-sapply(a6.trt,function(y) sapply(y,fun.AE.summary,simplify = F))
+        
+        a6.no_trt<-sapply(a6,function(y) unlist(sapply(y,function(x) {index1<-grep('treatment',x); if(length(index1)>0) x<-x[-index1];paste(x,collapse='/')})))
+        a6.no_trt<-sapply(a6.no_trt,function(y) sapply(y,fun.AE.summary,simplify = F))
+        
+        a7<-sapply(a6,function(y) sapply(y,function(x) paste(sub('grade3','High-Grade',sub('grade12','Low-Grade',sub('treatment\\.related','Trt',x))),collapse='/')),simplify = F)
+        
+        name1<-c("Sig_DC<PD", "Sig_DC>PD")
+        name2<-c("Associated with PD","Associated with DC")
+        
+        fun.group<-function(x,name.ref1=name1,name.ref2=name2)
+        {
+          name.tmp1<-names(x)
+          index1<-name.ref1%in%name.tmp1
+          if(sum(index1)<length(name.ref1)) {
+            name.null<-rep('',length(name.ref1[!index1]))
+            names(name.null)<-name.ref1[!index1]
+            x<-c(x,name.null)
+          }
+          x<-x[match(name.ref1,names(x))]
+          names(x)<-name.ref2
+          x
+        }
+        
+        table.AE.Response.sig.summary<-t(sapply(a7,function(x) fun.group(unlist(x))))
+        
+        q1=table.AE.Response.sig.summary
+        q11=data.frame(AE=rownames(q1),q1)
+        
+        #---table of ind AE by AE category
+        #q2=table(toxicity.raw.data$cdus_ctcae_toxicity_type_code,toxicity.raw.data$toxicity_category)
+         q2=table(AE_data()$cdus_toxicity_type_code,AE_data()$toxicity_category)
+        
+        #---get ind AE under AE category
+        q3=q2[rownames(q2)%in%rownames(q1)[!rownames(q1)%in%c('whole',colnames(q2))],,drop=F]
+        name1=rownames(q3)
+        q31<-q3[,apply(q3,2,sum)!=0,drop=F]
+        
+        name2=colnames(q31)
+        q5=apply(q31,1,function(x) name2[x>0])
+        q6=data.frame(cate.AE=q5,AE=names(q5))
+        q7=full_join(q6,q11)
+        q7$cate.AE[(1:dim(q7)[1])[is.na(q7$cate.AE)]]<-q7$AE[(1:dim(q7)[1])[is.na(q7$cate.AE)]]
+        q8=q7[order(q7$cate.AE),]
+        q8$AE[q8$AE==q8$cate.AE]<-NA
+        q8=q8[order(q8$cate.AE,q8$AE,na.last = F),]
+        index1<-grep('whole',q8$cate.AE)
+        q8<-q8[c(index1,(1:dim(q8)[1])[-index1]),]
+        q8$AE[is.na(q8$AE)]<-''
+        q8
+      })
+      
+      
+      # Display t-test pvalues and differences ####
+      output$responsesummarytable <- DT::renderDataTable({
+        todisplay <-  responsetempout()
+        showN<- NROW(todisplay)
+        datatable(todisplay, rownames = FALSE)
+        
+      }, options = list(pageLength = 50))
+      
+      
+      
+      
+      
+      
+      
+      # end: response summary          ^^^^^^^^^####
       
 }) # end server ####

@@ -157,6 +157,27 @@ function(request){
                     )
                   ),
                   
+                  tabPanel(
+                    div(icon("database"), "Survival summary"),
+                    div(
+                      #downloadButton('downloaddurationplotspdf',"Download duration plots"),
+                      br(),
+                      br(),
+                      br(),
+                      withSpinner(DT::dataTableOutput("survivalsummarytable"))
+                    )
+                  ),
+                  tabPanel(
+                    div(icon("database"), "Response summary"),
+                    div(
+                      #downloadButton('downloaddurationplotspdf',"Download duration plots"),
+                      br(),
+                      br(),
+                      br(),
+                      withSpinner(DT::dataTableOutput("responsesummarytable"))
+                    )
+                  ),
+                  
                     # tab to documentation/feedback
                     tabPanel(
                         div(icon("info-circle"), "Documentation"),
