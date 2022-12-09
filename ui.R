@@ -75,26 +75,66 @@ function(request){
                     ),
                     
                      
+                    # tabPanel(
+                    #     div(icon("chart-line"), "AE plot"),
+                    #     div(
+                    #         style = "position:relative",
+                    #         selectizeInput("single_var_input", "Patient number:", choices = NULL,
+                    #                        options = list(placeholder = "Select a patient",
+                    #                                       onInitialize = I('function() { this.setValue(""); }'))),
+                    #         br(),
+                    #         downloadButton("download_single_var_plot", "Save plot"),
+                    #         br(),
+                    #         withSpinner(plotOutput("single_var_plot", width = "100%", height = "500px")),
+                    #         br(),
+                    #         downloadButton('download_single_var_plot_early',"Save plot"),
+                    #         br(),
+                    #         withSpinner(plotOutput("single_var_plot_early", width = "100%", height = "500px"))
+                    #         
+                    #         # br(), br(),
+                    #         # verbatimTextOutput("single_var_summary")
+                    #     )
+                    # ),
+                    
                     tabPanel(
-                        div(icon("chart-line"), "AE plot"),
-                        div(
-                            style = "position:relative",
-                            selectizeInput("single_var_input", "Patient number:", choices = NULL,
-                                           options = list(placeholder = "Select a patient",
-                                                          onInitialize = I('function() { this.setValue(""); }'))),
-                            br(),
-                            downloadButton("download_single_var_plot", "Save plot"),
-                            br(),
-                            withSpinner(plotOutput("single_var_plot", width = "100%", height = "500px")),
-                            br(),
-                            downloadButton('download_single_var_plot_early',"Save plot"),
-                            br(),
-                            withSpinner(plotOutput("single_var_plot_early", width = "100%", height = "500px"))
-                            
-                            # br(), br(),
-                            # verbatimTextOutput("single_var_summary")
-                        )
+                      div(icon("chart-line"), "AE plot"),
+                      div(
+                        style = "position:relative",
+                        fluidRow(
+                          column(2,
+                                 selectizeInput("single_var_input", "Patient number:", choices = NULL,
+                                                options = list(placeholder = "Select a patient",
+                                                               onInitialize = I('function() { this.setValue(""); }')))
+                          ),
+                          column(2,
+                                 numericInput("AEplot_EarlyAECut","Early AE Time Point:", value = NULL, step = 1, min = 1)
+                          ),
+                          column(3,
+                                 checkboxInput("AEplot_ShowTime","Display Time Annotation", value = T)
+                          )
+                        ),
+                        #selectizeInput("single_var_input", "Patient number:", choices = NULL,
+                        #               options = list(placeholder = "Select a patient",
+                        #                              onInitialize = I('function() { this.setValue(""); }'))),
+                        #br(),
+                        #downloadButton("download_single_var_plot", "Save plot"),
+                        #br(),
+                        #withSpinner(plotOutput("single_var_plot", width = "100%", height = "500px")),
+                        br(),
+                        downloadButton('download_single_var_plot_early',"Save plot"),
+                        br(),
+                        withSpinner(plotOutput("single_var_plot_early", width = "100%", height = "500px"))
+                        
+                        # br(), br(),
+                        # verbatimTextOutput("single_var_summary")
+                      )
                     ),
+                    
+                    
+                    
+                    
+                    
+                    
                    tabPanel(
                        div(icon("database"), "AE days data"),
                        div(downloadButton('AEDAYSdownload',"Download the data"),
@@ -104,6 +144,9 @@ function(request){
                            withSpinner(  DT::dataTableOutput("selected_data_AEDAYS"))
                        )
                    ),
+                   
+                   
+                   
                    tabPanel(
                      div(icon("database"), "AE measures"),
                      div(downloadButton('toxicitymeasuresdownload',"Download the data"),
@@ -114,6 +157,31 @@ function(request){
                      )
                    ),
  
+                   
+                   # tabPanel(
+                   #   div(icon("database"), "AE measures"),
+                   #   fluidRow(
+                   #     column(2,
+                   #            div(downloadButton('toxicitymeasuresdownload',"Download the data"))
+                   #     ),
+                   #     column(2,
+                   #            numericInput("AEmeasuresEarlyAEcut","Early AE Time Point:", value = NULL, step = 1, min = 1)
+                   #     ),
+                   #     column(3,
+                   #            uiOutput("rendAEmeasuresAEcatselect")
+                   #     ),
+                   #     column(3,
+                   #            uiOutput("rendAEmeasuresAEtypeselect")
+                   #     )
+                   #   ),
+                   #   #div(downloadButton('toxicitymeasuresdownload',"Download the data"),
+                   #   br(),
+                   #   br(),
+                   #   br(),
+                   #   withSpinner(DT::dataTableOutput("toxicitytableoutput"))
+                   #   #)
+                   # )
+                   # ,
                    tabPanel( #https://stackoverflow.com/questions/46471756/download-pdf-report-in-shiny
                      div(icon("database"), "Coxph AE measures"),
                      div(downloadButton('downloadplotspdf',"Download plots"),

@@ -468,8 +468,167 @@ shinyServer(function(input, output, session) {
     
     
   # NEW AE swimmers plot EARLY cut off ####
+    # single_var_plot_early <- reactive({
+    #   
+    #   
+    #   w1<-AEandDemoData() %>% filter(is.na(onset_date_of_ae) == FALSE  & is.na(resolved_date) == FALSE  & is.na(on_treatment_date) == FALSE)
+    #   # print("names in w1")
+    #   # print(names(w1))
+    #   subject<-input$single_var_input  
+    #   
+    #   w1 <- w1 %>% filter(sequence_no == subject)
+    #   name1<-c('onset_date_of_ae','cdus_ctcae_toxicity_type_code', 'resolved_date','on_treatment_date' ,'grade')
+    #   name2<-c('attribution_possible','attribution_probable', 'attribution_definite')
+    #   w2<-w1%>%select(c(name1,name2))
+    #   w2[,name2][is.na(w2[,name2])] <- 'Not  Applicable'
+    #   w2$treatment_related<-!apply(as.matrix(w2[,name2]),1,function(x) all(x=='Not  Applicable'))
+    #   w2$treatment_related<-factor(w2$treatment_related,level=c(F,T),label=c('No','Yes'))
+    #   w2=w2%>%mutate(t1=as.numeric(difftime(onset_date_of_ae,on_treatment_date,units='days')),
+    #                  t2=as.numeric(difftime(resolved_date,on_treatment_date,units='days')),
+    #                  t12=as.numeric(difftime(resolved_date,onset_date_of_ae,units='days')),
+    #                  code=cdus_ctcae_toxicity_type_code)
+    #   w2$index<-as.numeric(factor(w2$code))
+    #   w2$grade<-as.factor(w2$grade)
+    #   
+    #   
+    #   
+    #   if("start_date_of_drug" %in% names( da_data_upload())) {
+    #     da_data_subject <- da_data_upload() %>% filter(sequence_no == subject) 
+    #   }else{
+    #     
+    #     da_data_subject <- da_data_upload() %>% mutate(start_date_of_drug = start_date) %>% filter(sequence_no == subject)
+    #     
+    #     
+    #   }
+    #   
+    #   if("drug" %in% names( da_data_subject)) {
+    #     da_data_subject <-da_data_subject %>% filter(sequence_no == subject) %>% 
+    #        select(sequence_no, start_date_of_drug, cycle, drug) %>% 
+    #       filter(!drug %in% c("Not  Applicable")) %>% 
+    #       filter(is.na(drug) == FALSE)
+    #     
+    #     
+    #   }else{
+    #     
+    #     da_data_subject <- da_data_subject %>% mutate(drug = level) %>% filter(sequence_no == subject) %>% 
+    #       select(sequence_no, start_date_of_drug, cycle, drug) %>%
+    #       filter(!drug %in% c("Not  Applicable")) %>%
+    #       filter(is.na(drug) == FALSE)
+    #     
+    #     
+    #   }
+    #   
+    #   
+    #   # print("names(da_data_subject) and DIM:")
+    #   # dim(da_data_subject)
+    #   # print(names(da_data_subject))
+    #   # 
+    #   # print("AE DATA FOR PLOT 2 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+    #   # print("names and DIM AE data w2 vvvvvv what ?????")
+    #   # print(names(w2))
+    #   # print(dim(w2))
+    #   # print("AE DATA FOR PLOT 2 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    #   #w2.2 <- w2 %>% select(on_treatment_date) %>% distinct(on_treatment_date) 
+    #   w2.2early <- w2 %>% distinct(on_treatment_date, .keep_all = TRUE) 
+    # 
+    #   
+    #   
+    #   # print("AE DATA FOR PLOT 2 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
+    #   # print("  AE data w2.2 early")
+    #   # print(w2.2early)
+    #   # print("dim AE data w2.2early")
+    #   # print(dim(w2.2early))
+    #   # print("AE DATA FOR PLOT 2 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
+    #   # print("names AE data w2.2early")
+    #   # print(names(w2.2early))
+    #   # w2.2 <- w2 %>% select(on_treatment_date) %>% distinct(on_treatment_date) 
+    #   
+    #   w3 <- merge(  da_data_subject, w2.2early) %>% mutate(dadaynumber = as.numeric(difftime(start_date_of_drug ,on_treatment_date,units='days')) )
+    #   # print("some DA data w3")
+    #   # print(w3)
+    #   # print("dim DA data w3")
+    #   # print(dim(w3)) 
+    #   # 
+    #   # 
+    #   # print("names w3")
+    #   # print(names(w3)) 
+    #   
+    #   UL <- max(w2$t2)+10
+    #   early_AE_plot_manuscript.fun<-function(AE.data= w2,early.time=365,k=1.1,k1=5,early.AE.status=FALSE)
+    #   {
+    #     vline.fun<-function(early.AE.status.tmp,early.time.tmp) if(early.AE.status.tmp)    geom_vline(xintercept = early.time.tmp,linetype="dotted")
+    #     geom_label.no_early_AE.fun<-function(early.AE.status.tmp) if(!early.AE.status.tmp) geom_label(aes(x=t2-(t12/2),y=index,label = t12), inherit.aes = F,hjust=0.5,size = 7)
+    #     geom_label.early_AE.fun<-function(early.AE.status.tmp) if(early.AE.status.tmp) geom_label(aes(x=t2-(t12/2),y=index,label = t12.early), inherit.aes = F,hjust=0.5,size = 7)
+    #     
+    #     # w1<-AE.data
+    #     g.cols=c("pink","purple",  'red',"blue",'black' )
+    #     w1<-AE.data %>% filter(is.na(resolved_date ) == FALSE  & is.na(on_treatment_date ) == FALSE)
+    #     
+    #     subject<-unique(w1$sequence_no)
+    #     name1<-c('onset_date_of_ae','cdus_ctcae_toxicity_type_code', 'resolved_date','on_treatment_date',#'AE.time',
+    #              'grade')
+    #     name2<-c('attribution_possible','attribution_probable', 'attribution_definite')
+    #     w2<-w1%>%select(c(name1,name2))
+    #     #  w2$treatment_related<-!apply(as.matrix(w2[,name2]),1,function(x) all(x=='Not  Applicable'))
+    #     w2$treatment_related<-!apply(as.matrix(w2[,name2]),1,function(x) all(x%in%c('Not  Applicable',NA)))
+    #     w2$treatment_related<-factor(w2$treatment_related,level=c(F,T),label=c('No','Yes'))
+    #     w2=w2%>%mutate(t1=as.numeric(difftime(onset_date_of_ae,on_treatment_date,units='days')),
+    #                    t2=as.numeric(difftime(resolved_date,on_treatment_date,units='days')),
+    #                    t12=as.numeric(difftime(resolved_date,onset_date_of_ae,units='days'))+1,
+    #                    code=cdus_ctcae_toxicity_type_code)
+    #     w2$index<-as.numeric(factor(w2$code))
+    #     
+    #     if(early.AE.status){
+    #       w2=w2%>%mutate(AE.early.indicator=(t1<=early.time)*(t2>=early.time))%>%
+    #         mutate(t12.early=ifelse(AE.early.indicator%in%1,paste(early.time-t1+ifelse(early.time==0,1,0),'+',t2-early.time+1,sep=''),t12))
+    #     }
+    #     
+    #     # print("vvvvvvvvvvv THIS IS THE DATA TO PLOT vvvvvvvvvvvvvvvv")
+    #     # print(w2)
+    #     # print("^^^^^^^^^^^ THIS IS THE DATA TO PLOT ^^^^^^^^^^^^^^^^")
+    #     plot1 <- ggplot(w2, aes(t1, index,color=grade,shape=treatment_related, label = code)) +
+    #       geom_point(aes(t2, index),size=2*k1)+
+    #       geom_segment(aes(xend = t2, yend = index), size = 1*k1, lineend = "butt")+
+    #       geom_label.no_early_AE.fun(early.AE.status.tmp=early.AE.status)+
+    #       geom_label.early_AE.fun(early.AE.status.tmp=early.AE.status)+
+    #       #    geom_label(aes(x=t2-(t12/2),y=index,label = t12), inherit.aes = F,hjust=1,size = 7)+
+    #       xlab('days')+ylab('')+
+    #       scale_y_continuous(breaks=w2$index,labels=w2$code)+
+    #       scale_x_continuous(breaks=(0:floor(max(w2$t2)/early.time))*early.time,limits=c(0, max(w2$t2)))+
+    #       #    xlim(0,NA)+
+    #       scale_color_manual(values=g.cols, drop=FALSE) +
+    #       vline.fun(early.AE.status.tmp=early.AE.status,early.time.tmp=early.time)+
+    #       theme(legend.position="top",
+    #             axis.text=element_text(size=20*k),
+    #             axis.title=element_text(size=20*k,face="bold"),
+    #             legend.text = element_text(size=16*k),
+    #             legend.title = element_text(size=20*k))
+    #     
+    #     w2$listdaynumber <- map2(w2$t1,w2$t2,function(.x, .y){.x:.y})
+    #     w2$totalnumberofdayswithAEs = length(unlist( w2$listdaynumber))
+    #     w2$numberofdayswithAEs <- length(unique(unlist( w2$listdaynumber)))
+    #     #list(data= w2, plot=plot1)
+    #     plot1
+    #   }
+    #   early_AE_plot_manuscript.fun()
+    # })
+    # 
+    
+    ##--AE Plot--##
+    
+    ## Implemented early AE time cut point annotation
+    ## Added drugg annotation vline
+    ## Implemented option display of day annotation
+    ## Rounded day annotation to whole number
+    
     single_var_plot_early <- reactive({
       
+      AEearly_Cut <- input$AEplot_EarlyAECut
+      TimeDisplay <- input$AEplot_ShowTime
+      AEearly_Cut_opt <- TRUE
+      if (is.na(AEearly_Cut)) {
+        AEearly_Cut_opt <- FALSE
+      }
       
       w1<-AEandDemoData() %>% filter(is.na(onset_date_of_ae) == FALSE  & is.na(resolved_date) == FALSE  & is.na(on_treatment_date) == FALSE)
       # print("names in w1")
@@ -503,7 +662,7 @@ shinyServer(function(input, output, session) {
       
       if("drug" %in% names( da_data_subject)) {
         da_data_subject <-da_data_subject %>% filter(sequence_no == subject) %>% 
-           select(sequence_no, start_date_of_drug, cycle, drug) %>% 
+          select(sequence_no, start_date_of_drug, cycle, drug) %>% 
           filter(!drug %in% c("Not  Applicable")) %>% 
           filter(is.na(drug) == FALSE)
         
@@ -530,7 +689,7 @@ shinyServer(function(input, output, session) {
       # print("AE DATA FOR PLOT 2 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^")
       #w2.2 <- w2 %>% select(on_treatment_date) %>% distinct(on_treatment_date) 
       w2.2early <- w2 %>% distinct(on_treatment_date, .keep_all = TRUE) 
-
+      
       
       
       # print("AE DATA FOR PLOT 2 vvvvvvvvvvvvvvvvvvvvvvvvvvvvvv")
@@ -554,8 +713,15 @@ shinyServer(function(input, output, session) {
       # print(names(w3)) 
       
       UL <- max(w2$t2)+10
-      early_AE_plot_manuscript.fun<-function(AE.data= w2,early.time=365,k=1.1,k1=5,early.AE.status=FALSE)
+      #early_AE_plot_manuscript.fun<-function(AE.data= w2,early.time=365,k=1.1,k1=5,early.AE.status=FALSE)
+      early_AE_plot_manuscript.fun<-function(AE.data= w2,early.time=AEearly_Cut,k=1.1,k1=5,early.AE.status=AEearly_Cut_opt)
+        
       {
+        
+        if (is.na(early.time)) {
+          early.time <- 30
+        }
+        
         vline.fun<-function(early.AE.status.tmp,early.time.tmp) if(early.AE.status.tmp)    geom_vline(xintercept = early.time.tmp,linetype="dotted")
         geom_label.no_early_AE.fun<-function(early.AE.status.tmp) if(!early.AE.status.tmp) geom_label(aes(x=t2-(t12/2),y=index,label = t12), inherit.aes = F,hjust=0.5,size = 7)
         geom_label.early_AE.fun<-function(early.AE.status.tmp) if(early.AE.status.tmp) geom_label(aes(x=t2-(t12/2),y=index,label = t12.early), inherit.aes = F,hjust=0.5,size = 7)
@@ -578,20 +744,32 @@ shinyServer(function(input, output, session) {
                        code=cdus_ctcae_toxicity_type_code)
         w2$index<-as.numeric(factor(w2$code))
         
+        w2$t1 <- round(w2$t1)
+        w2$t2 <- round(w2$t2)
+        w2$t12 <- round(w2$t12)
+        
         if(early.AE.status){
           w2=w2%>%mutate(AE.early.indicator=(t1<=early.time)*(t2>=early.time))%>%
             mutate(t12.early=ifelse(AE.early.indicator%in%1,paste(early.time-t1+ifelse(early.time==0,1,0),'+',t2-early.time+1,sep=''),t12))
         }
         
+        
         # print("vvvvvvvvvvv THIS IS THE DATA TO PLOT vvvvvvvvvvvvvvvv")
         # print(w2)
         # print("^^^^^^^^^^^ THIS IS THE DATA TO PLOT ^^^^^^^^^^^^^^^^")
         plot1 <- ggplot(w2, aes(t1, index,color=grade,shape=treatment_related, label = code)) +
+          geom_vline(data = w3, aes(xintercept = dadaynumber, color = drug)) +
           geom_point(aes(t2, index),size=2*k1)+
-          geom_segment(aes(xend = t2, yend = index), size = 1*k1, lineend = "butt")+
-          geom_label.no_early_AE.fun(early.AE.status.tmp=early.AE.status)+
-          geom_label.early_AE.fun(early.AE.status.tmp=early.AE.status)+
-          #    geom_label(aes(x=t2-(t12/2),y=index,label = t12), inherit.aes = F,hjust=1,size = 7)+
+          geom_segment(aes(xend = t2, yend = index), size = 1*k1, lineend = "butt")
+        if (TimeDisplay == TRUE) {
+          plot1 <- plot1 + 
+            geom_label.no_early_AE.fun(early.AE.status.tmp=early.AE.status)+                           ## Display full numbers
+            geom_label.early_AE.fun(early.AE.status.tmp=early.AE.status)                               ## Display Cut numbers
+        }
+        #geom_label.no_early_AE.fun(early.AE.status.tmp=early.AE.status)+
+        #geom_label.early_AE.fun(early.AE.status.tmp=early.AE.status)+
+        #    geom_label(aes(x=t2-(t12/2),y=index,label = t12), inherit.aes = F,hjust=1,size = 7)+
+        plot1 <- plot1 +
           xlab('days')+ylab('')+
           scale_y_continuous(breaks=w2$index,labels=w2$code)+
           scale_x_continuous(breaks=(0:floor(max(w2$t2)/early.time))*early.time,limits=c(0, max(w2$t2)))+
@@ -603,6 +781,8 @@ shinyServer(function(input, output, session) {
                 axis.title=element_text(size=20*k,face="bold"),
                 legend.text = element_text(size=16*k),
                 legend.title = element_text(size=20*k))
+        #ggnewscale::new_scale_color() +
+        #geom_vline(data = w3, aes(xintercept = dadaynumber, color = drug))
         
         w2$listdaynumber <- map2(w2$t1,w2$t2,function(.x, .y){.x:.y})
         w2$totalnumberofdayswithAEs = length(unlist( w2$listdaynumber))
@@ -612,6 +792,11 @@ shinyServer(function(input, output, session) {
       }
       early_AE_plot_manuscript.fun()
     })
+    
+    
+    
+    
+    
     
     output$single_var_plot_early <- renderPlot({   print(single_var_plot_early())    })
     
@@ -645,9 +830,9 @@ shinyServer(function(input, output, session) {
   # end: AE days tab ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^  #### 
     
   # Calculate all AE measures!!!!!!!!!!!!. ####
-    alldataoutput <- reactive({ 
-      
-      #---functions-----
+    alldataoutput <- reactive({
+
+      #---functions---
       toxicity.out.fun <- function(toxicity.data = toxicity.data, AE.time.cutoff = NULL) {
         #---identify subject without AE at the AE.time.cutoff--
         id.tmp <- sort(unique(toxicity.data$pid))
@@ -659,56 +844,56 @@ shinyServer(function(input, output, session) {
           print(paste("NROW after truncating tox:", NROW(toxicity.data)))
           print(paste("now how many patients?:",length(sort(unique(toxicity.data$pid)))))
         }
-        
+
         # print(names(toxicity.data ))
         # print(names(toxicity.data[, (2:6)]))
        # toxicity.data.by.id <- by(toxicity.data[, -(2:6)], toxicity.data$pid, data.frame) # makes a data frame for each id.
         #LINE bELOW CHAINGE 20221207
         toxicity.data.by.id <- by(toxicity.data, toxicity.data$pid, data.frame) # makes a data frame for each id.
-        
+
         # print("1......... str toxicity.data.by.id :")
         # print(class(toxicity.data.by.id ))
         # print(length(toxicity.data.by.id ))
         # print(names(toxicity.data.by.id[[1]]))
-        
+
         null.status <- sapply(toxicity.data.by.id, is.null) # tests if null?
         # print("2........... str null.status :")
         # print(class(null.status ))
         # print(length(null.status ))
         # print(table(null.status ))
-        
+
         toxicity.data.by.id <- toxicity.data.by.id[!null.status] # takes if null.status is FALSE
         # print("3.................str toxicity.data.by.id NOT NULL STAtUS :")
         # print(class(toxicity.data.by.id ))
         # print(length(toxicity.data.by.id ))
         # print(str(toxicity.data.by.id,1,1 ))
-        
+
         id.in.data <- names(toxicity.data.by.id)
-        id.no.AE <- id.tmp[!id.tmp %in% id.in.data] # gets patient numbers with out AE 
+        id.no.AE <- id.tmp[!id.tmp %in% id.in.data] # gets patient numbers with out AE
         # name.toxicity <- c( # WHERE IS THIS USED ? nowhere I think?
         #   "pid", "start_date_of_course_cycle", "onset_date_of_ae", "resolved_date", "cdus_ctcae_toxicity_type_code",
         #   "toxicity_category", "adverse_event_description", "grade", "attribution_total_therapy_regimen",
         #   "is_this_event_an_ir_ae", "dose_limiting_toxicity", "action", "serious_adverse_event", "sae_reported", "outcome"
         # )
         # name.toxicity<-c('pid','start_date_of_course_cycle','Onset.Date.of.AE',"Resolved.Date","CDUS.CTCAE.Toxicity.Type.Code", "Toxicity.Category","Adverse.Event.Description","Grade", "Attribution" ,"Dose.Limiting.Toxicity", "Action", "Serious.Adverse.Event" , "SAE.Reported", "Outcome")
-        
+
         name.group <- c("cdus_ctcae_toxicity_type_code", "toxicity_category")
         name.time <- c("onset_date_of_ae", "resolved_date")
         name.grade <- "grade"
         name.treatment.related <- c("attribution_possible", "attribution_probable", "attribution_definite")
-        
+
         toxicity.type.name <- names(table(as.vector(toxicity.data[, name.group[1]])))
         # print("5............ toxicity.type.names")
         # print(toxicity.type.name)
         toxicity.category.name <- names(table(as.vector(toxicity.data[, name.group[2]])))
-        
+
         table1 <- table(toxicity.data$cdus_ctcae_toxicity_type_code, toxicity.data$toxicity_category)
-        
+
         # THIS GETs each type of AE in each category by looking at each column of table1
         toxicity.type.within.category <- apply(table1, 2, function(x) dimnames(table1)[[1]][x != 0])
-        
+
         #    name.tox.summary<-c("freq.all.grade","duration.all.grade", "freq.grade12","duration.grade12","freq.grade3","duration.grade3","freq.all.grade.treatment.related","duration.all.grade.treatment.related","freq.grade12.treatment.related","duration.grade12.treatment.related","freq.grade3.treatment.related","duration.grade3.treatment.related")
-        
+
         name.tox.summary <-
           c(
             "all.grade.occurrence", "all.grade.fre", "all.grade.duration",
@@ -718,8 +903,8 @@ shinyServer(function(input, output, session) {
             "grade12.treatment.related.occurrence", "grade12.treatment.related.fre", "grade12.treatment.related.duration",
             "grade3.treatment.related.occurrence", "grade3.treatment.related.fre", "grade3.treatment.related.duration"
           )
-        
-        
+
+
         duration.fun <- function(x, index.tmp, AE.time.cutoff.tmp) {
           x <- x[index.tmp, , drop = F]
           # print(names(x))
@@ -733,16 +918,16 @@ shinyServer(function(input, output, session) {
           } else {
             ans <- AE.whole.duration
           }
-          
+
           # print(ans)
           ans
         }
-        
+
         #---generate long format data--
         tmp1 <- numeric()
         for (i in 1:length(toxicity.type.name))
         {
-          
+
           #--new---
           # print("toxicity.data.by.id")
           #  print(names(toxicity.data.by.id[[1]]))
@@ -767,19 +952,19 @@ shinyServer(function(input, output, session) {
               grade3.fre <- sum(index.all * index.grade3, na.rm = T)
               grade3.occurrence <- as.numeric(grade3.fre > 0)
               grade3.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade3, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
-              
+
               all.grade.treatment.related.fre <- sum(index.all * index.tretament.related, na.rm = T)
               all.grade.treatment.related.occurrence <- as.numeric(all.grade.treatment.related.fre > 0)
               all.grade.treatment.related.duration <- sum(duration.fun(x, index.tmp = index.all & index.tretament.related, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
-              
+
               grade12.treatment.related.fre <- sum(index.all * index.grade12 * index.tretament.related, na.rm = T)
               grade12.treatment.related.occurrence <- as.numeric(grade12.treatment.related.fre > 0)
               grade12.treatment.related.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade12 & index.tretament.related, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
-              
+
               grade3.treatment.related.fre <- sum(index.all * index.grade3 * index.tretament.related, na.rm = T)
               grade3.treatment.related.occurrence <- as.numeric(grade3.treatment.related.fre > 0)
               grade3.treatment.related.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade3 & index.tretament.related, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
-              
+
               c(
                 all.grade.occurrence, all.grade.fre, all.grade.duration,
                 grade12.occurrence, grade12.fre, grade12.duration,
@@ -790,24 +975,24 @@ shinyServer(function(input, output, session) {
               )
             }
           )
-          
+
             # print("VVVVVVVVVVVV str(tmp0,1,0)*******************")
           # print(name.tox.summary)
           # print(str(tmp0,1,0))
-          rownames(tmp0) <- name.tox.summary # not working now ? 
+          rownames(tmp0) <- name.tox.summary # not working now ?
           tmp0 <- as.data.frame(tmp0) %>%
             add_rownames(var = "measurement") %>%
             relocate(measurement)
           tmp0 <- tmp0 %>% pivot_longer(cols = -1, names_to = "pid", values_to = "value")
           tmp0$AE <- toxicity.type.name[i]
           tmp0$AE.category <- dimnames(table1)[[2]][table1[toxicity.type.name[i], ] != 0]
-          
+
           tmp1 <- rbind(tmp1, tmp0)
         }
-        
+
         #---summary function---
-        
-        
+
+
         AE.summary.fun <- function(data, var1, summary.status = T, id.no.AE.tmp = id.no.AE) {
           # data is a long format matrix with pid, AE, AE.catergory, measurement type, and the value
           # var1 = NULL for overall summary over all AEs
@@ -832,7 +1017,7 @@ shinyServer(function(input, output, session) {
             data.summary.wide <- data.summary.long %>% pivot_wider(names_from = measurement, values_from = sum)
             data.for.name <- data.summary.wide %>% select({{ var1 }})
             name1 <- names(table(data.for.name[, 2]))
-            
+
             AE.data.list <- map(
               as.list(name1),
               function(x) {
@@ -851,13 +1036,13 @@ shinyServer(function(input, output, session) {
           }
           AE.data.list
         } # END AE.summary.fun
-        
+
         data.raw.long <- tmp1
         toxicity.whole.summary.data <- AE.summary.fun(data = tmp1, var1 = "", summary.status = T, id.no.AE.tmp = id.no.AE)
         toxicity.category.summary.data <- AE.summary.fun(data = tmp1, var1 = AE.category, summary.status = F, id.no.AE.tmp = id.no.AE)
         toxicity.type.summary.data <- AE.summary.fun(data = tmp1, var1 = AE, summary.status = F, id.no.AE.tmp = id.no.AE)
-        #  
-        
+        #
+
         list(
           id.no.AE = id.no.AE
           ,data.raw.long = data.raw.long
@@ -868,12 +1053,273 @@ shinyServer(function(input, output, session) {
         )
       } # end toxicity.out.fun
 
-      
-      alldataoutput <- toxicity.out.fun(toxicity.data = toxicity_data(), AE.time.cutoff = NULL)    
+
+      alldataoutput <- toxicity.out.fun(toxicity.data = toxicity_data(), AE.time.cutoff = NULL)
       alldataoutput
-      
+
       })
-   
+
+    
+    
+    # alldataoutput <- reactive({ 
+    #   
+    #   ## New variables
+    #   toxicity_data_input <- toxicity_data()
+    #   AE_CatSelect <- input$AEmeasuresAEcatselect
+    #   AE_TypeSelect <- input$AEmeasuresAEtypeselect
+    #   EarlyAE_CutP <- input$AEmeasuresEarlyAEcut
+    #   if (is.na(EarlyAE_CutP)) {
+    #     EarlyAE_CutP <- NULL
+    #   }
+    #   if (AE_CatSelect == "All AE Categories") {
+    #     AE_CatSelect <- NULL
+    #   }
+    #   else if (AE_CatSelect != "All AE Categories") {
+    #     toxicity_data_input_cat <- toxicity_data_input[which(toxicity_data_input[,"toxicity_category"] == AE_CatSelect),]
+    #     toxicity_data_input <- toxicity_data_input_cat
+    #     if (!is.null(AE_TypeSelect)) {
+    #       if (AE_TypeSelect == "All AE Types") {
+    #         AE_TypeSelect <- NULL
+    #       }
+    #       else if (AE_TypeSelect != "All AE Types") {
+    #         toxicity_data_input_type <- toxicity_data_input_cat[which(toxicity_data_input_cat[,"cdus_ctcae_toxicity_type_code"] == AE_TypeSelect),]
+    #         toxicity_data_input <- toxicity_data_input_type
+    #       }
+    #     }
+    #   }
+    #   
+    #   #---functions-----
+    #   toxicity.out.fun <- function(toxicity.data = toxicity.data, AE.time.cutoff = NULL) {
+    #     #---identify subject without AE at the AE.time.cutoff--
+    #     id.tmp <- sort(unique(toxicity.data$pid))
+    #     print("HOW MANY PATIENTS")
+    #     print(length(id.tmp))
+    #     print(paste("NROW original tox:", NROW(toxicity.data)))
+    #     if (!is.null(AE.time.cutoff)) { print("WE HAVE A CUTOFF!!!")
+    #       toxicity.data <- toxicity.data %>% filter(AE.time < AE.time.cutoff)  # TRUNCATE TIME
+    #       print(paste("NROW after truncating tox:", NROW(toxicity.data)))
+    #       print(paste("now how many patients?:",length(sort(unique(toxicity.data$pid)))))
+    #     }
+    #     
+    #     # print(names(toxicity.data ))
+    #     # print(names(toxicity.data[, (2:6)]))
+    #     # toxicity.data.by.id <- by(toxicity.data[, -(2:6)], toxicity.data$pid, data.frame) # makes a data frame for each id.
+    #     #LINE bELOW CHAINGE 20221207
+    #     toxicity.data.by.id <- by(toxicity.data, toxicity.data$pid, data.frame) # makes a data frame for each id.
+    #     
+    #     # print("1......... str toxicity.data.by.id :")
+    #     # print(class(toxicity.data.by.id ))
+    #     # print(length(toxicity.data.by.id ))
+    #     # print(names(toxicity.data.by.id[[1]]))
+    #     
+    #     null.status <- sapply(toxicity.data.by.id, is.null) # tests if null?
+    #     # print("2........... str null.status :")
+    #     # print(class(null.status ))
+    #     # print(length(null.status ))
+    #     # print(table(null.status ))
+    #     
+    #     toxicity.data.by.id <- toxicity.data.by.id[!null.status] # takes if null.status is FALSE
+    #     # print("3.................str toxicity.data.by.id NOT NULL STAtUS :")
+    #     # print(class(toxicity.data.by.id ))
+    #     # print(length(toxicity.data.by.id ))
+    #     # print(str(toxicity.data.by.id,1,1 ))
+    #     
+    #     id.in.data <- names(toxicity.data.by.id)
+    #     id.no.AE <- id.tmp[!id.tmp %in% id.in.data] # gets patient numbers with out AE 
+    #     # name.toxicity <- c( # WHERE IS THIS USED ? nowhere I think?
+    #     #   "pid", "start_date_of_course_cycle", "onset_date_of_ae", "resolved_date", "cdus_ctcae_toxicity_type_code",
+    #     #   "toxicity_category", "adverse_event_description", "grade", "attribution_total_therapy_regimen",
+    #     #   "is_this_event_an_ir_ae", "dose_limiting_toxicity", "action", "serious_adverse_event", "sae_reported", "outcome"
+    #     # )
+    #     # name.toxicity<-c('pid','start_date_of_course_cycle','Onset.Date.of.AE',"Resolved.Date","CDUS.CTCAE.Toxicity.Type.Code", "Toxicity.Category","Adverse.Event.Description","Grade", "Attribution" ,"Dose.Limiting.Toxicity", "Action", "Serious.Adverse.Event" , "SAE.Reported", "Outcome")
+    #     
+    #     name.group <- c("cdus_ctcae_toxicity_type_code", "toxicity_category")
+    #     name.time <- c("onset_date_of_ae", "resolved_date")
+    #     name.grade <- "grade"
+    #     name.treatment.related <- c("attribution_possible", "attribution_probable", "attribution_definite")
+    #     
+    #     toxicity.type.name <- names(table(as.vector(toxicity.data[, name.group[1]])))
+    #     # print("5............ toxicity.type.names")
+    #     # print(toxicity.type.name)
+    #     toxicity.category.name <- names(table(as.vector(toxicity.data[, name.group[2]])))
+    #     
+    #     table1 <- table(toxicity.data$cdus_ctcae_toxicity_type_code, toxicity.data$toxicity_category)
+    #     
+    #     # THIS GETs each type of AE in each category by looking at each column of table1
+    #     toxicity.type.within.category <- apply(table1, 2, function(x) dimnames(table1)[[1]][x != 0])
+    #     
+    #     #    name.tox.summary<-c("freq.all.grade","duration.all.grade", "freq.grade12","duration.grade12","freq.grade3","duration.grade3","freq.all.grade.treatment.related","duration.all.grade.treatment.related","freq.grade12.treatment.related","duration.grade12.treatment.related","freq.grade3.treatment.related","duration.grade3.treatment.related")
+    #     
+    #     name.tox.summary <-
+    #       c(
+    #         "all.grade.occurrence", "all.grade.fre", "all.grade.duration",
+    #         "grade12.occurrence", "grade12.fre", "grade12.duration",
+    #         "grade3.occurrence", "grade3.fre", "grade3.duration",
+    #         "all.grade.treatment.related.occurrence", "all.grade.treatment.related.fre", "all.grade.treatment.related.duration",
+    #         "grade12.treatment.related.occurrence", "grade12.treatment.related.fre", "grade12.treatment.related.duration",
+    #         "grade3.treatment.related.occurrence", "grade3.treatment.related.fre", "grade3.treatment.related.duration"
+    #       )
+    #     
+    #     
+    #     duration.fun <- function(x, index.tmp, AE.time.cutoff.tmp) {
+    #       x <- x[index.tmp, , drop = F]
+    #       # print(names(x))
+    #       # print(x %>% select(resolved_date,onset_date_of_ae))
+    #       AE.whole.duration <- as.numeric(difftime(x$resolved_date, x$onset_date_of_ae, units = "days")) + 1 #--add 1 day to avoid 0 for same day of onset and resolved
+    #       # print("AE.whole.duration")
+    #       # print(AE.whole.duration)
+    #       if (!is.null(AE.time.cutoff.tmp)) {
+    #         max.AE <- AE.time.cutoff.tmp - x$AE.time + 1 #--add 1 day to avoid 0 for same day of onset and initial treatment day
+    #         ans <- ifelse(AE.whole.duration > max.AE, max.AE, AE.whole.duration)
+    #       } else {
+    #         ans <- AE.whole.duration
+    #       }
+    #       
+    #       # print(ans)
+    #       ans
+    #     }
+    #     
+    #     #---generate long format data--
+    #     tmp1 <- numeric()
+    #     for (i in 1:length(toxicity.type.name))
+    #     {
+    #       
+    #       #--new---
+    #       # print("toxicity.data.by.id")
+    #       #  print(names(toxicity.data.by.id[[1]]))
+    #       # print(name.group %in% names(toxicity.data.by.id[[1]]))
+    #       tmp0 <- sapply(
+    #         toxicity.data.by.id,
+    #         function(x) {
+    #           # print(dim(x))
+    #           # print(names(x))
+    #           # print(name.group[1])
+    #           # print(toxicity.type.name[i])
+    #           index.all <- x[, name.group[1]] == toxicity.type.name[i]
+    #           index.grade12 <- (as.numeric(as.vector(x[, name.grade])) < 3)
+    #           index.grade3 <- (as.numeric(as.vector(x[, name.grade])) >= 3)
+    #           index.tretament.related <- apply(x[, name.treatment.related], 1, function(x) any(x != "Not  Applicable"))
+    #           all.grade.fre <- sum(index.all, na.rm = T)
+    #           all.grade.occurrence <- as.numeric(all.grade.fre > 0)
+    #           all.grade.duration <- sum(duration.fun(x, index.tmp = index.all, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
+    #           grade12.fre <- sum(index.all * index.grade12, na.rm = T)
+    #           grade12.occurrence <- as.numeric(grade12.fre > 0)
+    #           grade12.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade12, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
+    #           grade3.fre <- sum(index.all * index.grade3, na.rm = T)
+    #           grade3.occurrence <- as.numeric(grade3.fre > 0)
+    #           grade3.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade3, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
+    #           
+    #           all.grade.treatment.related.fre <- sum(index.all * index.tretament.related, na.rm = T)
+    #           all.grade.treatment.related.occurrence <- as.numeric(all.grade.treatment.related.fre > 0)
+    #           all.grade.treatment.related.duration <- sum(duration.fun(x, index.tmp = index.all & index.tretament.related, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
+    #           
+    #           grade12.treatment.related.fre <- sum(index.all * index.grade12 * index.tretament.related, na.rm = T)
+    #           grade12.treatment.related.occurrence <- as.numeric(grade12.treatment.related.fre > 0)
+    #           grade12.treatment.related.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade12 & index.tretament.related, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
+    #           
+    #           grade3.treatment.related.fre <- sum(index.all * index.grade3 * index.tretament.related, na.rm = T)
+    #           grade3.treatment.related.occurrence <- as.numeric(grade3.treatment.related.fre > 0)
+    #           grade3.treatment.related.duration <- sum(duration.fun(x, index.tmp = index.all & index.grade3 & index.tretament.related, AE.time.cutoff.tmp = AE.time.cutoff), na.rm = T)
+    #           
+    #           c(
+    #             all.grade.occurrence, all.grade.fre, all.grade.duration,
+    #             grade12.occurrence, grade12.fre, grade12.duration,
+    #             grade3.occurrence, grade3.fre, grade3.duration,
+    #             all.grade.treatment.related.occurrence, all.grade.treatment.related.fre, all.grade.treatment.related.duration,
+    #             grade12.treatment.related.occurrence, grade12.treatment.related.fre, grade12.treatment.related.duration,
+    #             grade3.treatment.related.occurrence, grade3.treatment.related.fre, grade3.treatment.related.duration
+    #           )
+    #         }
+    #       )
+    #       
+    #       # print("VVVVVVVVVVVV str(tmp0,1,0)*******************")
+    #       # print(name.tox.summary)
+    #       # print(str(tmp0,1,0))
+    #       rownames(tmp0) <- name.tox.summary # not working now ? 
+    #       tmp0 <- as.data.frame(tmp0) %>%
+    #         add_rownames(var = "measurement") %>%
+    #         relocate(measurement)
+    #       tmp0 <- tmp0 %>% pivot_longer(cols = -1, names_to = "pid", values_to = "value")
+    #       tmp0$AE <- toxicity.type.name[i]
+    #       tmp0$AE.category <- dimnames(table1)[[2]][table1[toxicity.type.name[i], ] != 0]
+    #       
+    #       tmp1 <- rbind(tmp1, tmp0)
+    #     }
+    #     
+    #     #---summary function---
+    #     
+    #     
+    #     AE.summary.fun <- function(data, var1, summary.status = T, id.no.AE.tmp = id.no.AE) {
+    #       # data is a long format matrix with pid, AE, AE.catergory, measurement type, and the value
+    #       # var1 = NULL for overall summary over all AEs
+    #       if (summary.status) {
+    #         data.summary.long <- data %>%
+    #           group_by(pid, measurement) %>%
+    #           dplyr::summarise(sum = sum(value))
+    #         data.summary.wide <- data.summary.long %>% pivot_wider(names_from = measurement, values_from = sum)
+    #         data.tmp <- data.summary.wide
+    #         if (length(id.no.AE.tmp) > 0) {
+    #           data.tmp.no.AE <- data.tmp[1:length(id.no.AE.tmp), , drop = F]
+    #           data.tmp.no.AE$pid <- id.no.AE.tmp
+    #           data.tmp.no.AE[, 2:dim(data.tmp.no.AE)[2]] <- 0
+    #           data.tmp$pid <- as.character(data.tmp$pid)              ## Fix for issue with column classes not matching
+    #           data.tmp.no.AE$pid <- as.character(data.tmp.no.AE$pid)  ## Fix for issue with column classes not matching
+    #           data.tmp <- rbind(data.tmp, data.tmp.no.AE)
+    #         }
+    #         AE.data.list <- data.tmp
+    #       } else {
+    #         # this step is to sum the value within pid and AE or AE.category
+    #         data.summary.long <- data %>%
+    #           group_by(pid, {{ var1 }}, measurement) %>%
+    #           dplyr::summarise(sum = sum(value))
+    #         data.summary.wide <- data.summary.long %>% pivot_wider(names_from = measurement, values_from = sum)
+    #         data.for.name <- data.summary.wide %>% select({{ var1 }})
+    #         name1 <- names(table(data.for.name[, 2]))
+    #         
+    #         AE.data.list <- map(
+    #           as.list(name1),
+    #           function(x) {
+    #             # under each AE or AE.category
+    #             data.tmp <- data.summary.wide %>% filter({{ var1 }} %in% x)
+    #             if (length(id.no.AE.tmp) > 0) {
+    #               data.tmp.no.AE <- data.tmp[1:length(id.no.AE.tmp), , drop = F]
+    #               data.tmp.no.AE$pid <- id.no.AE.tmp
+    #               data.tmp.no.AE[, 3:dim(data.tmp.no.AE)[2]] <- 0
+    #               data.tmp$pid <- as.character(data.tmp$pid)               ## Fix for issue with column classes not matching
+    #               data.tmp.no.AE$pid <- as.character(data.tmp.no.AE$pid)   ## Fix for issue with column classes not matching
+    #               data.tmp <- rbind(data.tmp, data.tmp.no.AE)
+    #             }
+    #             data.tmp
+    #           }
+    #         )
+    #         names(AE.data.list) <- name1
+    #       }
+    #       AE.data.list
+    #     } # END AE.summary.fun
+    #     
+    #     data.raw.long <- tmp1
+    #     toxicity.whole.summary.data <- AE.summary.fun(data = tmp1, var1 = "", summary.status = T, id.no.AE.tmp = id.no.AE)
+    #     toxicity.category.summary.data <- AE.summary.fun(data = tmp1, var1 = AE.category, summary.status = F, id.no.AE.tmp = id.no.AE)
+    #     toxicity.type.summary.data <- AE.summary.fun(data = tmp1, var1 = AE, summary.status = F, id.no.AE.tmp = id.no.AE)
+    #     #  
+    #     
+    #     list(
+    #       id.no.AE = id.no.AE
+    #       ,data.raw.long = data.raw.long
+    #       ,toxicity.type.within.category = toxicity.type.within.category
+    #       ,toxicity.category.summary.data = toxicity.category.summary.data
+    #       ,toxicity.type.summary.data = toxicity.type.summary.data
+    #       ,toxicity.whole.summary.data = toxicity.whole.summary.data
+    #     )
+    #   } # end toxicity.out.fun
+    #   
+    #   
+    #   #alldataoutput <- toxicity.out.fun(toxicity.data = toxicity_data(), AE.time.cutoff = NULL)    
+    #   alldataoutput <- toxicity.out.fun(toxicity.data = toxicity_data_input, AE.time.cutoff = EarlyAE_CutP)    
+    #   alldataoutput
+    #   
+    # })
+    # 
   # MERGING AE measures with follow up and demographics to make TOXDATA with all the measures ####
     toxicity.whole.summary.data <- reactive({  
    
