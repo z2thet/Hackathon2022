@@ -340,7 +340,7 @@ shinyServer(function(input, output, session) {
       pivot_wider(names_from = grade, values_from = n, names_sort = TRUE)
     
     summary_ae_drug # ->summary_ae_drugMCC18494 #->summary_ae_drugMCC18494
-      
+    summary_ae_drug[is.na(summary_ae_drug)] <- 0
  
     datatable(summary_ae_drug , 
               rownames = FALSE, options = list(pageLength = 100))
@@ -421,7 +421,7 @@ shinyServer(function(input, output, session) {
     output$AEDAYSdownload <- downloadHandler( 
       filename = function(){"AEdays.csv"}, 
       content = function(fname){
-        write.csv(AEdays(), fname)
+        write.csv(AEdays(), fname, row.names = FALSE)
       }
     )
   }
@@ -1360,46 +1360,26 @@ print("^^^^^^^^^^^^^^^^^^^^^^^^^^ w2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
         print(paste("now how many patients?:",length(sort(unique(toxicity.data$pid)))))
       }
       
-      # print(names(toxicity.data ))
-      # print(names(toxicity.data[, (2:6)]))
-      # toxicity.data.by.id <- by(toxicity.data[, -(2:6)], toxicity.data$pid, data.frame) # makes a data frame for each id.
-      #LINE bELOW CHAINGE 20221207
+ 
       toxicity.data.by.id <- by(toxicity.data, toxicity.data$pid, data.frame) # makes a data frame for each id.
       
-      # print("1......... str toxicity.data.by.id :")
-      # print(class(toxicity.data.by.id ))
-      # print(length(toxicity.data.by.id ))
-      # print(names(toxicity.data.by.id[[1]]))
-      
+       
       null.status <- sapply(toxicity.data.by.id, is.null) # tests if null?
-      # print("2........... str null.status :")
-      # print(class(null.status ))
-      # print(length(null.status ))
-      # print(table(null.status ))
+ 
       
       toxicity.data.by.id <- toxicity.data.by.id[!null.status] # takes if null.status is FALSE
-      # print("3.................str toxicity.data.by.id NOT NULL STAtUS :")
-      # print(class(toxicity.data.by.id ))
-      # print(length(toxicity.data.by.id ))
-      # print(str(toxicity.data.by.id,1,1 ))
+ 
       
       id.in.data <- names(toxicity.data.by.id)
       id.no.AE <- id.tmp[!id.tmp %in% id.in.data] # gets patient numbers with out AE 
-      # name.toxicity <- c( # WHERE IS THIS USED ? nowhere I think?
-      #   "pid", "start_date_of_course_cycle", "onset_date_of_ae", "resolved_date", "cdus_ctcae_toxicity_type_code",
-      #   "toxicity_category", "adverse_event_description", "grade", "attribution_total_therapy_regimen",
-      #   "is_this_event_an_ir_ae", "dose_limiting_toxicity", "action", "serious_adverse_event", "sae_reported", "outcome"
-      # )
-      # name.toxicity<-c('pid','start_date_of_course_cycle','Onset.Date.of.AE',"Resolved.Date","CDUS.CTCAE.Toxicity.Type.Code", "Toxicity.Category","Adverse.Event.Description","Grade", "Attribution" ,"Dose.Limiting.Toxicity", "Action", "Serious.Adverse.Event" , "SAE.Reported", "Outcome")
-      
+ 
       name.group <- c("cdus_ctcae_toxicity_type_code", "toxicity_category")
       name.time <- c("onset_date_of_ae", "resolved_date")
       name.grade <- "grade"
       name.treatment.related <- c("attribution_possible", "attribution_probable", "attribution_definite")
       
       toxicity.type.name <- names(table(as.vector(toxicity.data[, name.group[1]])))
-      # print("5............ toxicity.type.names")
-      # print(toxicity.type.name)
+       # print(toxicity.type.name)
       toxicity.category.name <- names(table(as.vector(toxicity.data[, name.group[2]])))
       
       table1 <- table(toxicity.data$cdus_ctcae_toxicity_type_code, toxicity.data$toxicity_category)
@@ -1407,8 +1387,7 @@ print("^^^^^^^^^^^^^^^^^^^^^^^^^^ w2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
       # THIS GETs each type of AE in each category by looking at each column of table1
       toxicity.type.within.category <- apply(table1, 2, function(x) dimnames(table1)[[1]][x != 0])
       
-      #    name.tox.summary<-c("freq.all.grade","duration.all.grade", "freq.grade12","duration.grade12","freq.grade3","duration.grade3","freq.all.grade.treatment.related","duration.all.grade.treatment.related","freq.grade12.treatment.related","duration.grade12.treatment.related","freq.grade3.treatment.related","duration.grade3.treatment.related")
-      
+       
       name.tox.summary <-
         c(
           "all.grade.occurrence", "all.grade.fre", "all.grade.duration",
@@ -1685,7 +1664,7 @@ print("^^^^^^^^^^^^^^^^^^^^^^^^^^ w2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     filename = function(){"toxicitymeasures.csv"}, 
     content = function(fname){
       #write.csv(alldataoutput()$toxicity.whole.summary.data, fname)
-      write.csv(toxicity.whole.summary.data(), fname)
+      write.csv(toxicity.whole.summary.data(), fname, row.names = FALSE)
     }
   )
   
@@ -3054,7 +3033,7 @@ print("^^^^^^^^^^^^^^^^^^^^^^^^^^ w2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     filename = function(){"survival_summary.csv"}, 
     content = function(fname){
       #write.csv(alldataoutput()$toxicity.whole.summary.data, fname)
-      write.csv(survivialtempout(), fname)
+      write.csv(survivialtempout(), fname, row.names = FALSE)
     }
   )
   
@@ -3176,7 +3155,7 @@ print("^^^^^^^^^^^^^^^^^^^^^^^^^^ w2 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
     filename = function(){"response_summary.csv"}, 
     content = function(fname){
       #write.csv(alldataoutput()$toxicity.whole.summary.data, fname)
-      write.csv(responsetempout(), fname)
+      write.csv(responsetempout(), fname, row.names = FALSE)
     }
   )
   
