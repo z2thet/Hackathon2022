@@ -1,11 +1,23 @@
 ---
 output: pdf_document
-params:
-  draw_plot: NULL
+ 
 ---
+```{r echo=FALSE, message=FALSE, warning=FALSE, as.is = TRUE} 
+library(kableExtra) 
+```
 
-```{r echo=FALSE, message=FALSE, warning=FALSE, as.is = TRUE}
-if (!is.null(params$draw_plot))
-  params$draw_plot()
+# Survival table
+```{r echo=FALSE, message=FALSE, warning=FALSE }
+ 
+print(dim(survivialtempout()))
+
+kable(survivialtempout())
+```
+
+# Response table
+```{r echo=FALSE, message=FALSE, warning=FALSE }
+ 
+print(dim(responsetempout()))
+kable(responsetempout())
 ```
  
