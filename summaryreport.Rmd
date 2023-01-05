@@ -1,0 +1,11 @@
+---
+output: pdf_document
+params:
+  draw_plot: NULL
+---
+
+```{r echo=FALSE, message=FALSE, warning=FALSE, as.is = TRUE}
+if (!is.null(params$draw_plot))
+  params$draw_plot()
+```
+ 

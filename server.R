@@ -2720,4 +2720,57 @@ shinyServer(function(input, output, session) {
       
       # end: response summary          ^^^^^^^^^####
       
+      
+      #start: summary report VVVVVVVVVVVVV#####
+      
+      output$downloadsumaryReport <- downloadHandler(
+        
+        filename = function() {
+          
+          
+          filename = "summary_report.pdf" 
+        },
+        
+        content = function(file) {
+          
+          out <- rmarkdown::render(input = 'summaryreport.Rmd',
+                                   
+                                   output_format = rmarkdown::pdf_document(),
+                                     
+                                     # switch(input$format,
+                                     #        
+                                     #        PDF = rmarkdown::pdf_document(),
+                                     #        
+                                     #        HTML = rmarkdown::html_document(),
+                                     #        
+                                     #        Word = rmarkdown::word_document()
+                                     #        
+                                     # ),
+                                   
+                                   # params = list(set_title = input$project_title, set_author = input$author_input)
+                                   
+          )
+          
+          #file.rename(out, file)
+          file.copy(out,file) 
+        }
+        
+      )
+      
+      # output$downloaddurationplotspdf <- downloadHandler(
+      #   filename = "duration_rendered_report.pdf",
+      #   content = function(file) {
+      #     res <- rmarkdown::render(
+      #       "templateduration.Rmd",
+      #       params = list(
+      #         draw_plot_duration = draw_plot_duration
+      #       )
+      #     )
+      #     file.rename(res, file)
+      #   }
+      # )
+      # end: summary report ^^^^^^^^^^^^^####
+      
+      
+      
 }) # end server ####

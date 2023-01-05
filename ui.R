@@ -245,6 +245,16 @@ function(request){
                       withSpinner(DT::dataTableOutput("responsesummarytable"))
                     )
                   ),
+                  tabPanel(
+                    div(icon("database"), "Summary Report"),
+                    div(
+                      #downloadButton('downloaddurationplotspdf',"Download duration plots"),
+                      br(),
+                      br(),
+                      br(),p("[Coming soon]")
+                      
+                    )
+                  ),
                   
                     # tab to documentation/feedback
                     tabPanel(
